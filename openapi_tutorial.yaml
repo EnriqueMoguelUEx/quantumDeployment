@@ -1,0 +1,610 @@
+openapi: 3.0.2
+info:
+  title: Quantum Services
+  description: This API enables the generation of quantum services.
+  version: '1.0'
+  termsOfService: 'https://quantum.spilab.es/terms'
+  contact:
+    name: Spilab
+    url: 'https://spilab.es'
+    email: info@spilab.es
+tags:
+  - name: quantum
+    description: Everything about your Quantum Service
+  - name: quantum_code
+    description: Everything about your quantum service code and circuits
+paths:
+
+  /circuit/maxcut3qubitsQASM:
+    post:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of max cut 3 qubits in QASM 
+      description: ''
+      operationId: maxcut3qubitsQASM
+      parameters:
+        - name: machine
+          in: query
+          description: maxcut3qubitsQASM
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCodeQASM: '"OPENQASM 2.0;\ninclude ''qelib1.inc'';\nqreg q[3];\ncreg meas[3];\nh q[0];\nh q[1];\nrzz(1.0) q[0],q[1];\nh q[2];\nrzz(1.0) q[0],q[2];\nrx(2.0) q[0];\nrzz(1.0) q[1],q[2];\nrx(2.0) q[1];\nrx(2.0) q[2];\nbarrier q[0],q[1],q[2];\nmeasure q[0] -> meas[0];\nmeasure q[1] -> meas[1];\nmeasure q[2] -> meas[2];\n"'
+      x-quantumCode: null
+      x-quantumProvider: 'ibm'
+      
+  /circuit/parameterizedQASM:
+    post:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of a parameterized circuit in QASM 
+      description: ''
+      operationId: parameterizedQASM
+      requestBody:
+        description: algorithm parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParametersQASM'
+      parameters:
+        - name: machine
+          in: query
+          description: parameterizedQASM
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCodeQASM: '"OPENQASM 3;\ninclude ''stdgates.inc'';\ninput float[64] beta0;\ninput float[64] gamma0;\ngate rzz_1466526231824(gamma0) _gate_q_0, _gate_q_1 {\n  cx _gate_q_0, _gate_q_1;\n  rz(gamma0) _gate_q_1;\n  cx _gate_q_0, _gate_q_1;\n}\ngate rzz_1466525103632(gamma0) _gate_q_0, _gate_q_1 {\n  cx _gate_q_0, _gate_q_1;\n  rz(gamma0) _gate_q_1;\n  cx _gate_q_0, _gate_q_1;\n}\ngate rzz_1466532946384(gamma0) _gate_q_0, _gate_q_1 {\n  cx _gate_q_0, _gate_q_1;\n  rz(gamma0) _gate_q_1;\n  cx _gate_q_0, _gate_q_1;\n}\ngate rzz_1466526338000(gamma0) _gate_q_0, _gate_q_1 {\n  cx _gate_q_0, _gate_q_1;\n  rz(gamma0) _gate_q_1;\n  cx _gate_q_0, _gate_q_1;\n}\ngate rzz_1466526335120(gamma0) _gate_q_0, _gate_q_1 {\n  cx _gate_q_0, _gate_q_1;\n  rz(gamma0) _gate_q_1;\n  cx _gate_q_0, _gate_q_1;\n}\nbit[4] meas;\nqubit[4] q;\nh q[0];\nh q[1];\nrzz_1466526231824(gamma0) q[0], q[1];\nh q[2];\nrzz_1466525103632(gamma0) q[0], q[2];\nrx(2.0*beta0) q[0];\nrzz_1466532946384(gamma0) q[1], q[2];\nh q[3];\nrzz_1466526338000(gamma0) q[1], q[3];\nrx(2.0*beta0) q[1];\nrzz_1466526335120(gamma0) q[2], q[3];\nrx(2.0*beta0) q[2];\nrx(2.0*beta0) q[3];\nbarrier q[0], q[1], q[2], q[3];\nmeas[0] = measure q[0];\nmeas[1] = measure q[1];\nmeas[2] = measure q[2];\nmeas[3] = measure q[3];\n"'
+      x-quantumCode: null
+      x-quantumProvider: 'ibm'
+
+  /circuit/ShorAWSquirk:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Shor Algorithm
+      description: ''
+      operationId: ShorAWSquirk
+      parameters:
+        - name: machine
+          in: query
+          description: Shor's algorithm is a quantum computer algorithm for finding the prime factors of an integer
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":[["H","H","H","H"],["X"],["X","X","X","X"],[1,"•","X"],[1,"X","•"],[1,"•","X"],[1,1,"•","X"],[1,1,"X","•"],[1,1,"•","X"],["•",1,1,"X"],["X",1,1,"•"],["•",1,1,"X"],["Measure","Measure","Measure","Measure"]]}'
+      x-quantumProvider: 'aws'
+  
+  /circuit/ShorIBMqiskit:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Shor Algorithm
+      description: ''
+      operationId: ShorIBMqiskit
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/ceae6c374df01a918844b8d607bd8b6446888c8d/Popular/Shor_algorithm.py'
+      x-quantumProvider: 'ibm'
+      
+  /circuit/CircuitIBMqiskitParameterized:
+    post:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of circuit with parameters
+      description: ''
+      operationId: CircuitIBMqiskitParameterized
+      requestBody:
+        description: algorithm parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameters'
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/4afa4163c8aaa2ea7a3713ee19a0a02cca1517fa/Parameterized/ParameterizedQiskit.py'
+      x-quantumProvider: 'ibm'
+
+  /circuit/CircuitAWSParameterized:
+    post:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of circuit with parameters
+      description: ''
+      operationId: CircuitAWSParameterized
+      requestBody:
+        description: algorithm parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameters'
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/af8c1f0e7fd51c048baa688ef0357d40e27b3002/Parameterized/ParameterizedAWS.py'
+      x-quantumProvider: 'aws'
+      
+  /circuit/BernsteinVaziraniIBMquirk:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Bernstein-Vazirani Algorithm
+      description: ''
+      operationId: BernsteinVaziraniIBMquirk
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":[["H","H","H"],[1,1,1,"X"],[1,1,1,"H"],["•",1,1,"X"],[1,"•",1,"X"],[1,1,"•","X"],["H","H","H"],["Measure","Measure","Measure"]]}'
+      x-quantumProvider: 'ibm'
+
+  /circuit/BernsteinVaziraniIBMqiskit:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit Implementation of Bernstein-Vazirani Algorithm
+      description: ''
+      operationId: BernsteinVaziraniIBMqiskit
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/1ab019ea64f58ad36063025bd0c75ac71a8d552a/Popular/Bernstein-Vazirani.py'
+      x-quantumProvider: 'ibm'
+  
+  /circuit/GroverIBMquirk:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Grover Algorithm
+      description: ''
+      operationId: GroverIBMquirk
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":[["H","H"],[1,"X"],[1,"H"],["•","X"],[1,"H"],[1,"X"],[1,"H"],[1,"Measure"]]}'
+      x-quantumProvider: 'ibm'
+  
+  /circuit/GroverIBMqiskit:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Grover Algorithm
+      description: ''
+      operationId: GroverIBMqiskit
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/2a424a660e913b70eada1663cb167c4cb3d154f0/Popular/Grover_algorithm.py'
+      x-quantumProvider: 'ibm'
+      
+  /circuit/DeutschJozsaAWSquirk:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Deutsch Jozsa Algorithm
+      description: ''
+      operationId: DeutschJozsaAWSquirk
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":[["H","H","H"],["X",1,"X","X"],[1,1,1,"H"],["•",1,1,"X"],[1,"•",1,"X"],[1,1,"•","X"],["X",1,"X"],["H","H","H"],["Measure","Measure","Measure"]]}'
+      x-quantumProvider: 'aws'
+      
+  /circuit/DeutschJozsaIBMqiskit:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Deutsch Jozsa Algorithm
+      description: ''
+      operationId: DeutschJozsaIBMqiskit
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/0a90a21154f2496eb6329dcd3b211baaf0ebd40a/Popular/Deutsch%E2%80%93Jozsa_algorithm.py'
+      x-quantumProvider: 'ibm'
+  
+  /circuit/SimonIBMquirk:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Simon Algorithm
+      description: ''
+      operationId: SimonIBMquirk
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":[["H","H","H"],["•",1,1,"X"],[1,"•",1,1,"X"],[1,1,"•",1,1,"X"],[1,"•",1,1,"X"],[1,"•",1,1,1,"X"],["H","H","H"],["Measure","Measure","Measure"]]}'
+      x-quantumProvider: 'ibm' 
+      
+  /circuit/SimonIBMqiskit:
+    get:
+      tags:
+        - quantum_code
+      summary: Get the circuit implementation of Simon Algorithm
+      description: ''
+      operationId: SimonIBMqiskit
+      parameters:
+        - name: machine
+          in: query
+          description: quantum machine
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://bitbucket.org/spilab/quantum-circuits-code/raw/1ba980ee63c38fd77ec670412c4aab5215e78a8f/Popular/Simon_algorithm.py'
+      x-quantumProvider: 'ibm'
+      
+  /findByCategory:
+    get:
+      tags:
+        - quantum
+      summary: Finds quantum service by category
+      description: Multiple status values can be provided with comma separated strings
+      operationId: findServiceByCategory
+      parameters:
+        - name: qua
+          in: query
+          description: Status values that need to be considered for filter
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - annealing
+                - gate-based
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/quantum'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/quantum'
+        '400':
+          description: Invalid status value
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+components:
+  schemas:
+    Category:
+      title: quantum category
+      description: A category for a quantum code
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          pattern: ^[a-zA-Z0-9]+[a-zA-Z0-9\.\-_]*[a-zA-Z0-9]+$
+      xml:
+        name: Category
+
+    ParametersQASM:
+      properties:
+        gamma0:
+          type: number
+          format: float
+          example: 0.1
+        beta0:
+          type: number
+          format: float
+          example: 0.6    
+        
+    Parameters:
+      properties:
+        gamma:
+          type: number
+          format: float
+          example: 0.1
+        beta:
+          type: number
+          format: float
+          example: 0.6
+    quantum:
+      title: quantum code
+      description: quantum code 
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        category:
+          $ref: '#/components/schemas/Category'
+        name:
+          type: string
+          example: gate-based
+      xml:
+        name: quantum
