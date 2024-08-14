@@ -1,0 +1,61 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Automate deployment
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  validate:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build python API with YAML
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install jinja2==3.0.3 --force-reinstall
+          pip install itsdangerous==2.0.1 --force-reinstall
+          pip install werkzeug==2.0.3 --force-reinstall        
+      - name: Build with Maven
+        run: java -jar openapi-generator-cli.jar generate -i openapi.yaml -g python-quantum -o ./openapi_server
+      - name: Zip code
+        run: zip -r openapi_server.zip openapi_server
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: Quantum Services
+          path: ./openapi_server.zip
+
+      - name: Check python project
+        run: |
+         cd ./openapi_server
+         python -m compileall .
+         #python -m openapi_server          
+      - name: Deploy Stage
+        run: curl -X POST -F 'name=quantumdeployment' -F 'yaml=https://raw.githubusercontent.com/javierrome236/quantumDeployment/main/openapi_tutorial.yaml' http://quantumservicesdeployment.spilab.es:8081/docker
+
+          
