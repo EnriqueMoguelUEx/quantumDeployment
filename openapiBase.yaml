@@ -14,6 +14,40 @@ tags:
   - name: quantum_code
     description: Everything about your quantum service code and circuits
 paths:
+  /circuit/Hadamard:
+    post:
+      tags:
+        - quantum_code
+      summary: Hadamard circuit 1
+      description: ''
+      operationId: Hadamard
+      parameters:
+        - name: machine
+          in: query
+          description: Hadamard
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: string
+        - name: shots
+          in: query
+          description: Number of shots
+          required: true
+          style: form
+          explode: false
+          deprecated: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: successful operation
+        '405':
+          description: Invalid execution
+      x-quantumCode: 'https://algassert.com/quirk#circuit={"cols":["H","H","H","H"]}'
+      x-quantumProvider: 'aws'
+
   /circuit/ibm:
     get:
       tags:
